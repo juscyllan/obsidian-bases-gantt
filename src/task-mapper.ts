@@ -92,6 +92,7 @@ export function createGroupHeaderTask(
 export function mapEntriesToTasks(
   entries: BasesEntry[],
   config: TaskMapperConfig,
+  previousTasks?: GanttTask[],
 ): GanttTask[] {
   if (!config.startProperty) return [];
 
@@ -244,6 +245,19 @@ export function mapEntriesToTasks(
     });
   }
 
+  // If we have a previous task order, preserve it; only sort on first render.
+  if (previousTasks && previousTasks.length > 0) {
+    const prevOrder = new Map<string, number>();
+    for (let i = 0; i < previousTasks.length; i++) {
+      prevOrder.set(previousTasks[i].id, i);
+    }
+    return tasks.sort((a, b) => {
+      const ai = prevOrder.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+      const bi = prevOrder.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+      return ai - bi;
+    });
+  }
+
   return sortByDependencies(tasks);
 }
 
@@ -263,7 +277,10 @@ function sortByDependencies(tasks: GanttTask[]): GanttTask[] {
   for (const t of tasks) {
     const deps = new Set<string>();
     if (t.dependencies) {
-      for (const d of t.dependencies.split(',')) {
+      const depList = Array.isArray(t.dependencies)
+        ? t.dependencies
+        : t.dependencies.split(',');
+      for (const d of depList) {
         const id = d.trim();
         if (id && taskMap.has(id)) deps.add(id);
       }
