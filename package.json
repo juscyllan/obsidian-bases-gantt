@@ -1,22 +1,29 @@
 {
-	"name": "obsidian-bases-gantt",
-	"version": "1.0.0",
-	"description": "Gantt chart view for Obsidian Bases",
-	"main": "main.js",
-	"scripts": {
-		"dev": "bun run build.ts --watch",
-		"build": "bun run build.ts production"
-	},
-	"author": "lhassa8",
-	"keywords": ["obsidian", "obsidian-plugin", "gantt", "bases"],
-	"license": "MIT",
-	"devDependencies": {
-		"@types/bun": "^1.3.11",
-		"@types/node": "25.5.0",
-		"obsidian": "1.12.3",
-		"typescript": "5.9.3"
-	},
-	"dependencies": {
-		"frappe-gantt": "1.2.2"
-	}
+  "name": "obsidian-bases-gantt",
+  "version": "1.0.0",
+  "description": "Gantt chart view for Obsidian Bases",
+  "main": "main.js",
+  "scripts": {
+    "dev": "bun run build.ts --watch",
+    "build": "bun run build.ts production",
+    "format": "biome check src/ --write --unsafe"
+  },
+  "author": "lhassa8",
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "gantt",
+    "bases"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.8",
+    "@types/bun": "^1.3.11",
+    "@types/node": "25.5.0",
+    "obsidian": "1.12.3",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "frappe-gantt": "1.2.2"
+  }
 }
