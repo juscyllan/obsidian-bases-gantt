@@ -11,24 +11,10 @@ async function build() {
       naming: 'main.js',
       format: 'cjs',
       target: 'browser',
+
       minify: prod,
       sourcemap: prod ? 'none' : 'inline',
       external: ['obsidian', 'electron', '@codemirror/*', '@lezer/*'],
-      plugins: [
-        {
-          name: 'css-stub',
-          setup(build) {
-            build.onResolve({ filter: /\.css$/ }, (args) => ({
-              path: args.path,
-              namespace: 'css-stub',
-            }));
-            build.onLoad({ filter: /.*/, namespace: 'css-stub' }, () => ({
-              contents: '',
-              loader: 'js',
-            }));
-          },
-        },
-      ],
     }),
     Bun.build({
       entrypoints: ['src/styles/main.css'],
@@ -39,29 +25,30 @@ async function build() {
   ]);
 
   if (!js.success || !css.success) {
+    console.log('❌ Build Failed');
     for (const log of [...js.logs, ...css.logs]) console.error(log);
     return false;
   }
+
+  console.log(`✅ Build Sucess: watch=${watchMode} target=${prod ? 'prod' : 'dev'}`);
   return true;
 }
 
 function watch() {
   let timer: ReturnType<typeof setTimeout> | null = null;
-  console.log('👀 Watching src/ for changes...');
+  console.log('...watching src/ for changes...');
 
   fsWatch('src', { recursive: true }, (_event, filename) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(async () => {
       timer = null;
-      console.log(`\n↻ ${filename}`);
-      const ok = await build();
-      console.log(ok ? '✓ Rebuild' : '✗ Rebuild failed');
+      console.log(`🔄 ${filename}`);
+      await build();
     }, 100);
   });
 }
 
 const ok = await build();
-console.log(ok ? '✓ Build' : '✗ Build failed');
 if (!ok && !watchMode) process.exit(1);
 
 if (watchMode) watch();

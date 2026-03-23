@@ -478,9 +478,9 @@ export class GanttChartView extends BasesView {
       const pct = Math.round(ctx.task.progress);
       parts.push(
         `<div class="gantt-popup-progress-row">` +
-          `<div class="gantt-popup-progress"><div class="gantt-popup-progress-bar" style="width:${pct}%"></div></div>` +
-          `<span class="gantt-popup-progress-label">${pct}%</span>` +
-          `</div>`,
+        `<div class="gantt-popup-progress"><div class="gantt-popup-progress-bar" style="width:${pct}%"></div></div>` +
+        `<span class="gantt-popup-progress-label">${pct}%</span>` +
+        `</div>`,
       );
     }
 
@@ -488,9 +488,9 @@ export class GanttChartView extends BasesView {
       const deps = Array.isArray(ctx.task.dependencies)
         ? ctx.task.dependencies
         : String(ctx.task.dependencies)
-            .split(',')
-            .map((d) => d.trim())
-            .filter(Boolean);
+          .split(',')
+          .map((d) => d.trim())
+          .filter(Boolean);
       const depNames = deps.map((depId) => {
         const depTask = this.findTask(depId);
         return depTask ? this.escapeHtml(depTask.name) : depId;
