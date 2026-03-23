@@ -267,7 +267,7 @@ export function mapEntriesToTasks(
  * dependencies are already placed. Ties broken by start date.
  * This ensures dependency arrows always point downward in the chart.
  */
-function sortByDependencies(tasks: GanttTask[]): GanttTask[] {
+export function sortByDependencies(tasks: GanttTask[]): GanttTask[] {
   if (tasks.length <= 1) return tasks;
 
   const taskMap = new Map<string, GanttTask>();

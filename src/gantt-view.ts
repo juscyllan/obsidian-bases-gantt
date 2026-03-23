@@ -20,6 +20,7 @@ import {
   type GanttTask,
   GROUP_HEADER_PREFIX,
   mapEntriesToTasks,
+  sortByDependencies,
   type TaskMapperConfig,
 } from './task-mapper';
 
@@ -97,45 +98,19 @@ export class GanttChartView extends BasesView {
     this.gantt?.scroll_current();
   }
 
+  /** Force re-sort tasks by dependencies and refresh the chart. */
+  sortTasks(): void {
+    if (!this.gantt) return;
+    const tasks = sortByDependencies([...this.taskMap.values()]);
+    this.taskMap.clear();
+    for (const t of tasks) this.taskMap.set(t.id, t);
+    this.gantt.refresh(tasks);
+  }
+
   setViewMode(mode: string): void {
     if (this.gantt) {
       this.gantt.change_view_mode(mode, true);
     }
-  }
-
-  createTaskAtToday(): void {
-    const config = this.getTaskMapperConfig();
-    if (!config.startProperty) {
-      new Notice('Configure a start date property first.');
-      return;
-    }
-    const today = formatDateForFrontmatter(new Date());
-    const propName = this.extractPropertyName(config.startProperty);
-    void this.createFileForView('New task', (frontmatter) => {
-      frontmatter[propName] = today;
-      if (config.endProperty) {
-        const endPropName = this.extractPropertyName(config.endProperty);
-        frontmatter[endPropName] = today;
-      }
-    });
-  }
-
-  createTaskAtDate(dateStr: string): void {
-    const config = this.getTaskMapperConfig();
-    if (!config.startProperty) {
-      new Notice('Configure a start date property first.');
-      return;
-    }
-    const parsed = parseObsidianDate(dateStr);
-    const formattedDate = parsed ? formatDateForFrontmatter(parsed) : dateStr;
-    const propName = this.extractPropertyName(config.startProperty);
-    void this.createFileForView('New task', (frontmatter) => {
-      frontmatter[propName] = formattedDate;
-      if (config.endProperty) {
-        const endPropName = this.extractPropertyName(config.endProperty);
-        frontmatter[endPropName] = formattedDate;
-      }
-    });
   }
 
   findTask(id: string): GanttTask | undefined {
@@ -296,10 +271,6 @@ export class GanttChartView extends BasesView {
             [propName]: Math.round(progress),
           });
         }
-      },
-
-      on_date_click: (dateStr: string) => {
-        this.createTaskAtDate(dateStr);
       },
     };
 

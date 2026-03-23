@@ -26,17 +26,6 @@ export default class BasesGanttPlugin extends Plugin {
     });
 
     this.addCommand({
-      id: 'gantt-create-task',
-      name: 'Create new task',
-      icon: 'plus',
-      checkCallback: (checking) => {
-        const view = this.getActiveGanttView();
-        if (checking) return !!view;
-        view?.createTaskAtToday();
-      },
-    });
-
-    this.addCommand({
       id: 'gantt-view-day',
       name: 'Day view',
       checkCallback: (checking) => {
@@ -73,6 +62,17 @@ export default class BasesGanttPlugin extends Plugin {
         const view = this.getActiveGanttView();
         if (checking) return !!view;
         view?.setViewMode('Year');
+      },
+    });
+
+    this.addCommand({
+      id: 'gantt-sort-tasks',
+      name: 'Sort tasks by dependencies',
+      icon: 'arrow-up-down',
+      checkCallback: (checking) => {
+        const view = this.getActiveGanttView();
+        if (checking) return !!view;
+        view?.sortTasks();
       },
     });
   }
