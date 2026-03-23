@@ -1,17 +1,17 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"inlineSourceMap": true,
 		"inlineSources": true,
-		"module": "ESNext",
-		"target": "ES2022",
 		"allowJs": true,
 		"noImplicitAny": true,
-		"moduleResolution": "node",
-		"importHelpers": true,
 		"isolatedModules": true,
 		"strictNullChecks": true,
-		"lib": ["DOM", "ES2022"]
+		"skipLibCheck": true,
+		"lib": ["DOM", "ES2022"],
+		"types": ["@types/bun"]
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["src/**/*.ts", "build.ts"]
 }
